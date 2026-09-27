@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>RIMAPI Debug Actions</name>
+  <author>Roman Gr</author>
+  <packageId>roman.rimapi.debugactions</packageId>
+  <modVersion>0.1.0</modVersion>
+  <description>Exposes registered RimWorld debug actions through RIMAPI for development and test automation.</description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>RedEyeDev.RIMAPI</packageId>
+      <displayName>RIMAPI</displayName>
+      <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=3593423732</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>RedEyeDev.RIMAPI</li>
+  </loadAfter>
+</ModMetaData>

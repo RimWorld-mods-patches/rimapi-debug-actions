@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>RimApiDebugActions</AssemblyName>
+    <RootNamespace>RimApiDebugActions</RootNamespace>
+    <Version>0.1.0</Version>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <OutputPath>../../1.6/Assemblies/</OutputPath>
+    <RimApiDirectory Condition="'$(RimApiDirectory)' == ''">$(HOME)/Library/Application Support/Steam/steamapps/workshop/content/294100/3593423732/1.6/Assemblies</RimApiDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="RIMAPI">
+      <HintPath>$(RimApiDirectory)/RIMAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(RimApiDirectory)/Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="ValidateGameReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(RimApiDirectory)/RIMAPI.dll')" Text="RIMAPI.dll not found under '$(RimApiDirectory)'. Set RimApiDirectory to RIMAPI's installed 1.6 Assemblies folder." />
+    <Error Condition="!Exists('$(RimApiDirectory)/Newtonsoft.Json.dll')" Text="Newtonsoft.Json.dll not found under '$(RimApiDirectory)'. Set RimApiDirectory to RIMAPI's installed 1.6 Assemblies folder." />
+  </Target>
+</Project>
