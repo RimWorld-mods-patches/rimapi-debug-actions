@@ -7,7 +7,7 @@ namespace RimApiDebugActions
     {
         public string ExtensionId => "debug-actions";
         public string ExtensionName => "RimWorld Debug Actions";
-        public string Version => "0.1.0";
+        public string Version => "0.1.1";
 
         public void RegisterServices(IServiceCollection services)
         {

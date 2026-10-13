@@ -9,7 +9,7 @@ namespace RimApiDebugActions
 {
     internal sealed class DebugActionService
     {
-        private const string DebugActionAttributeName = "Verse.DebugActionAttribute";
+        private const string DebugActionAttributeName = "LudeonTK.DebugActionAttribute";
 
         public object List(string filter)
         {

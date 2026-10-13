@@ -5,12 +5,22 @@
     <Nullable>disable</Nullable>
     <AssemblyName>RimApiDebugActions</AssemblyName>
     <RootNamespace>RimApiDebugActions</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <OutputPath>../../1.6/Assemblies/</OutputPath>
-    <RimApiDirectory Condition="'$(RimApiDirectory)' == ''">$(HOME)/Library/Application Support/Steam/steamapps/workshop/content/294100/3593423732/1.6/Assemblies</RimApiDirectory>
+  </PropertyGroup>
+
+  <!-- RIMAPI is not on NuGet. The build downloads its pinned GitHub release,
+       verifies the archive hash and references the assemblies from obj/.
+       Nothing from RIMAPI is copied into this mod. -->
+  <PropertyGroup>
+    <RimApiVersion>1.10.0</RimApiVersion>
+    <RimApiSha256>4c07cd4f23cb88287c86a0159f11e9e935b22b7d460f4675a19191136e479dc9</RimApiSha256>
+    <RimApiArchiveUrl>https://github.com/IlyaChichkov/RIMAPI/releases/download/v$(RimApiVersion)/RIMAPI-$(RimApiVersion).zip</RimApiArchiveUrl>
+    <RimApiCache>$(MSBuildProjectDirectory)/obj/rimapi/$(RimApiVersion)</RimApiCache>
+    <RimApiDirectory>$(RimApiCache)/1.6/Assemblies</RimApiDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +36,18 @@
     </Reference>
   </ItemGroup>
 
-  <Target Name="ValidateGameReferences" BeforeTargets="ResolveReferences">
-    <Error Condition="!Exists('$(RimApiDirectory)/RIMAPI.dll')" Text="RIMAPI.dll not found under '$(RimApiDirectory)'. Set RimApiDirectory to RIMAPI's installed 1.6 Assemblies folder." />
-    <Error Condition="!Exists('$(RimApiDirectory)/Newtonsoft.Json.dll')" Text="Newtonsoft.Json.dll not found under '$(RimApiDirectory)'. Set RimApiDirectory to RIMAPI's installed 1.6 Assemblies folder." />
+  <Target Name="FetchRimApi" BeforeTargets="ResolveAssemblyReferences" Condition="!Exists('$(RimApiDirectory)/RIMAPI.dll')">
+    <DownloadFile SourceUrl="$(RimApiArchiveUrl)" DestinationFolder="$(RimApiCache)" Retries="3">
+      <Output TaskParameter="DownloadedFile" PropertyName="_RimApiArchive" />
+    </DownloadFile>
+    <GetFileHash Files="$(_RimApiArchive)" Algorithm="SHA256">
+      <Output TaskParameter="Hash" PropertyName="_RimApiArchiveHash" />
+    </GetFileHash>
+    <Delete Files="$(_RimApiArchive)" Condition="'$(_RimApiArchiveHash)' != '$(RimApiSha256)'" />
+    <Error Condition="'$(_RimApiArchiveHash)' != '$(RimApiSha256)'"
+           Text="RIMAPI $(RimApiVersion) archive hash $(_RimApiArchiveHash) does not match the pinned $(RimApiSha256)." />
+    <Unzip SourceFiles="$(_RimApiArchive)" DestinationFolder="$(RimApiCache)" />
+    <Error Condition="!Exists('$(RimApiDirectory)/RIMAPI.dll') Or !Exists('$(RimApiDirectory)/Newtonsoft.Json.dll')"
+           Text="RIMAPI $(RimApiVersion) archive has no 1.6/Assemblies/RIMAPI.dll and Newtonsoft.Json.dll." />
   </Target>
 </Project>
