@@ -1,37 +1,66 @@
 # RIMAPI Debug Actions
 
-A RimWorld 1.6 companion mod for RIMAPI. It discovers methods marked with RimWorld's `DebugActionAttribute`, lists them with stable IDs, supports case-insensitive text filtering, and can invoke parameterless static actions.
+A RimWorld 1.6 companion mod for [RIMAPI](https://github.com/IlyaChichkov/RIMAPI). It discovers methods marked
+with RimWorld's `LudeonTK.DebugActionAttribute`, lists them with stable IDs, supports case-insensitive text
+filtering, and can invoke parameterless static actions over HTTP. It is test automation for mod development,
+for example the live tests of [Realistic Bases](https://github.com/RimWorld-mods-patches/realistic-bases).
 
-RIMAPI exposes these routes under its extension namespace:
+## Install
+
+1. Install [RIMAPI](https://steamcommunity.com/sharedfiles/filedetails/?id=3593423732) and its dependency Harmony.
+2. Download `RimApiDebugActions-<version>.zip` from the
+   [releases](https://github.com/RimWorld-mods-patches/rimapi-debug-actions/releases) and extract it into
+   RimWorld's `Mods` folder (`Mods/RimApiDebugActions/About/About.xml`). The rolling `main-latest` release
+   follows the `main` branch.
+3. Load it after RIMAPI.
+
+## API
+
+RIMAPI 1.10 mounts the extension under `/api/v1/debug-actions`:
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| GET | `/api/extensions/debug-actions/debug-actions` | List registered actions; optional `filter` query parameter filters by name, category, assembly, type, signature, or ID |
-| POST | `/api/extensions/debug-actions/debug-actions/run?id={id}` | Invoke a listed runnable action |
+| GET | `/api/v1/debug-actions/debug-actions` | List registered actions; the optional `filter` query parameter matches name, category, assembly, type, signature or ID |
+| POST | `/api/v1/debug-actions/debug-actions/run?id={id}` | Invoke a listed runnable action |
 
-The list marks each item with `is_runnable`. Debug actions that require parameters or an instance target are listed but cannot be invoked by this initial API. Actions run on RIMAPI's game-thread request pipeline and retain the behavior and side effects defined by their mods. The API should only be used in a trusted local development environment.
-
-Example calls (replace the ID with one returned by the list):
+Each listed action has `id`, `name`, `category`, `assembly`, `declaring_type`, `signature` and `is_runnable`.
+Actions that need parameters or a map/pawn target are listed but cannot be invoked. A run returns
+`success: false` with an `error` when the action is unknown, not runnable or throws. Actions run on RIMAPI's
+game-thread request pipeline with the behaviour and side effects their mods define. **Use the API only in a
+trusted local development environment.**
 
 ```sh
-curl 'http://localhost:8765/api/extensions/debug-actions/debug-actions'
-curl 'http://localhost:8765/api/extensions/debug-actions/debug-actions?filter=Realistic%20Bases'
-curl -X POST 'http://localhost:8765/api/extensions/debug-actions/debug-actions/run?id=BASE64URL_ID' \
+curl 'http://localhost:8765/api/v1/debug-actions/debug-actions?filter=Realistic%20Bases'
+curl -X POST 'http://localhost:8765/api/v1/debug-actions/debug-actions/run?id=BASE64URL_ID' \
   -H 'Content-Type: application/json' --data '{}'
 ```
 
+Use `localhost` rather than `127.0.0.1`; the macOS listener is IPv6-backed.
+
 ## Build
 
-The project targets RimWorld 1.6 reference assemblies from NuGet and references the installed RIMAPI 1.6 assembly. The default RIMAPI path matches the macOS Steam installation; override it when needed:
+RIMAPI is not published on NuGet. The project downloads the pinned RIMAPI GitHub release
+(`RimApiVersion` in the project file), verifies its SHA-256 and references the assemblies from `obj/`.
+No local RimWorld or RIMAPI installation is needed, and nothing from RIMAPI is copied into this mod.
 
 ```sh
-docker run --rm \
-  -v "$PWD":/mod \
-  -v rimworld-nuget:/root/.nuget/packages \
-  -w /mod/Source/RimApiDebugActions \
-  mcr.microsoft.com/dotnet/sdk:8.0 \
-  dotnet build -c Release \
-    -p:RimApiDirectory="/path/to/RIMAPI/1.6/Assemblies"
+dotnet build Source/RimApiDebugActions/RimApiDebugActions.csproj -c Release
 ```
 
-The output assembly is written to `1.6/Assemblies/RimApiDebugActions.dll`. RimWorld and RIMAPI reference assemblies are not copied into the mod.
+or without a local SDK:
+
+```sh
+docker run --rm -v "$PWD":/mod -v rimworld-nuget:/root/.nuget/packages \
+  -w /mod/Source/RimApiDebugActions mcr.microsoft.com/dotnet/sdk:8.0 dotnet build -c Release
+```
+
+The output is `1.6/Assemblies/RimApiDebugActions.dll`. To move to a new RIMAPI release, update
+`RimApiVersion` and `RimApiSha256` together.
+
+CI builds every pull request into `main` on Linux, Windows and macOS. Pushes to `main` publish the
+`main-latest` pre-release, and a `v<version>` tag publishes a release; the tag must match `<modVersion>` in
+`About/About.xml` and `<Version>` in the project.
+
+## License
+
+[MIT](LICENSE). RIMAPI itself is GPL-3.0 and is only downloaded at build time, never redistributed here.
