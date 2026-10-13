@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "mod_name": "RIMAPI Debug Actions",
+  "package_id": "roman.rimapi.debugactions",
+  "project": "Source/RimApiDebugActions/RimApiDebugActions.csproj",
+  "sdk_image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "test_projects": [],
+  "output_dlls": ["RimApiDebugActions.dll"],
+  "baseline_save": "RimApiDebugActions-Disposable",
+  "runtime_notes": ".rimworld-dev.md",
+  "baseline_mods": ["brrainz.harmony", "ludeon.rimworld", "RedEyeDev.RIMAPI", "roman.rimapi.debugactions"]
+}
