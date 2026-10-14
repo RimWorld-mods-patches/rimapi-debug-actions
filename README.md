@@ -2,7 +2,7 @@
 
 A RimWorld 1.6 companion mod for [RIMAPI](https://github.com/IlyaChichkov/RIMAPI). It discovers methods marked
 with RimWorld's `LudeonTK.DebugActionAttribute`, lists them with stable IDs, supports case-insensitive text
-filtering, and can invoke parameterless static actions over HTTP. It is test automation for mod development,
+filtering, invokes parameterless static actions and saves the running game over HTTP. It is test automation for mod development,
 for example the live tests of [Realistic Bases](https://github.com/RimWorld-mods-patches/realistic-bases).
 
 ## Install
@@ -22,6 +22,7 @@ RIMAPI 1.10 mounts the extension under `/api/v1/debug-actions`:
 | --- | --- | --- |
 | GET | `/api/v1/debug-actions/debug-actions` | List registered actions; the optional `filter` query parameter matches name, category, assembly, type, signature or ID |
 | POST | `/api/v1/debug-actions/debug-actions/run?id={id}` | Invoke a listed runnable action |
+| POST | `/api/v1/debug-actions/save?name={name}` | Save the running game as `{name}.rws` in the profile's save folder; `name` must be a plain file name |
 
 Each listed action has `id`, `name`, `category`, `assembly`, `declaring_type`, `signature` and `is_runnable`.
 Actions that need parameters or a map/pawn target are listed but cannot be invoked. A run returns
@@ -34,6 +35,9 @@ curl 'http://localhost:8765/api/v1/debug-actions/debug-actions?filter=Realistic%
 curl -X POST 'http://localhost:8765/api/v1/debug-actions/debug-actions/run?id=BASE64URL_ID' \
   -H 'Content-Type: application/json' --data '{}'
 ```
+
+The save route answers `success: true` with the written `path`, `bytes` and `tick` only once the file
+exists; the shared `setup-dev.py` uses it to create a profile's baseline save.
 
 Use `localhost` rather than `127.0.0.1`; the macOS listener is IPv6-backed.
 
