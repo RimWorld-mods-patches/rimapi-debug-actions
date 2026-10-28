@@ -6,6 +6,6 @@
    RimWorld `Mods` folder, so that the path is `Mods/RimApiDebugActions/About/About.xml`.
 3. In the mod list, load **RIMAPI Debug Actions** after **RIMAPI**.
 
-#### Supported RimWorld version: 1.6 (built against RIMAPI 1.10.0)
+#### Supported RimWorld version: 1.7 (built against RIMAPI 1.10.0)
 
 This mod runs any listed debug action on request. Use it only in a trusted local development setup.

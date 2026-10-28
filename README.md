@@ -1,11 +1,13 @@
 # RIMAPI Debug Actions
 
-A RimWorld 1.6 companion mod for [RIMAPI](https://github.com/IlyaChichkov/RIMAPI). It discovers methods marked
+A RimWorld 1.7 companion mod for [RIMAPI](https://github.com/IlyaChichkov/RIMAPI). It discovers methods marked
 with RimWorld's `LudeonTK.DebugActionAttribute`, lists them with stable IDs, supports case-insensitive text
 filtering, invokes parameterless static actions and saves the running game over HTTP. It is test automation for mod development,
 for example the live tests of [Realistic Bases](https://github.com/RimWorld-mods-patches/realistic-bases).
 
 ## Install
+
+This release supports RimWorld 1.7. For RimWorld 1.6, use [release 0.2.0](https://github.com/RimWorld-mods-patches/rimapi-debug-actions/releases/tag/v0.2.0), the last release tested with 1.6.
 
 1. Install [RIMAPI](https://steamcommunity.com/sharedfiles/filedetails/?id=3593423732) and its dependency Harmony.
 2. Download `RimApiDebugActions-<version>.zip` from the
@@ -55,10 +57,10 @@ or without a local SDK:
 
 ```sh
 docker run --rm -v "$PWD":/mod -v rimworld-nuget:/root/.nuget/packages \
-  -w /mod/Source/RimApiDebugActions mcr.microsoft.com/dotnet/sdk:8.0 dotnet build -c Release
+  -w /mod/Source/RimApiDebugActions mcr.microsoft.com/dotnet/sdk:10.0 dotnet build -c Release
 ```
 
-The output is `1.6/Assemblies/RimApiDebugActions.dll`. To move to a new RIMAPI release, update
+The output is `1.7/Assemblies/RimApiDebugActions.dll`. To move to a new RIMAPI release, update
 `RimApiVersion` and `RimApiSha256` together.
 
 CI builds every pull request into `main` on Linux, Windows and macOS. Pushes to `main` publish the

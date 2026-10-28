@@ -1,19 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Nullable>disable</Nullable>
     <AssemblyName>RimApiDebugActions</AssemblyName>
     <RootNamespace>RimApiDebugActions</RootNamespace>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <OutputPath>../../1.6/Assemblies/</OutputPath>
+    <OutputPath>../../1.7/Assemblies/</OutputPath>
   </PropertyGroup>
 
-  <!-- RIMAPI is not on NuGet. The build downloads its pinned GitHub release,
-       verifies the archive hash and references the assemblies from obj/.
+  <!-- RIMAPI is not on NuGet. Its 1.10.0 release carries its API assemblies
+       under 1.6/Assemblies; the API contract is used to build this 1.7 mod.
+       The build verifies the archive hash and references assemblies from obj/.
        Nothing from RIMAPI is copied into this mod. -->
   <PropertyGroup>
     <RimApiVersion>1.10.0</RimApiVersion>
@@ -24,8 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" PrivateAssets="all" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4990-unstable" PrivateAssets="all" ExcludeAssets="runtime" />
     <Reference Include="RIMAPI">
       <HintPath>$(RimApiDirectory)/RIMAPI.dll</HintPath>
       <Private>false</Private>
