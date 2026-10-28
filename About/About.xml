@@ -3,10 +3,10 @@
   <name>RIMAPI Debug Actions</name>
   <author>Roman Gr</author>
   <packageId>romangr.rimapi.debugactions</packageId>
-  <modVersion>0.2.0</modVersion>
+  <modVersion>0.3.0</modVersion>
   <description>Exposes registered RimWorld debug actions and game saving through RIMAPI for development and test automation.</description>
   <supportedVersions>
-    <li>1.6</li>
+    <li>1.7</li>
   </supportedVersions>
   <modDependencies>
     <li>

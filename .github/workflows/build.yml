@@ -41,7 +41,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        # Add another major version (e.g. '12', '9') to test more SDKs.
+        # RimWorld 1.7 targets net10.0; test the pinned SDK and newer SDKs.
         sdk: [global.json, '10', '11']
       fail-fast: false
     defaults:
@@ -209,7 +209,7 @@ jobs:
         cache: true
         cache-dependency-path: '**/*.csproj'
 
-    # The project writes RimApiDebugActions.dll into 1.6/Assemblies/, which
+    # The project writes RimApiDebugActions.dll into 1.7/Assemblies/, which
     # together with About/ is the complete mod folder.
     - name: Build mod (Release)
       run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release
@@ -218,9 +218,9 @@ jobs:
     - name: Verify shipped assemblies
       run: |
         set -euo pipefail
-        ACTUAL=$(cd 1.6/Assemblies && ls)
+        ACTUAL=$(cd 1.7/Assemblies && ls)
         if [ "$ACTUAL" != "RimApiDebugActions.dll" ]; then
-          echo "::error::1.6/Assemblies must contain only RimApiDebugActions.dll, found: $ACTUAL"
+          echo "::error::1.7/Assemblies must contain only RimApiDebugActions.dll, found: $ACTUAL"
           exit 1
         fi
 
@@ -236,7 +236,7 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p artifacts/mod/RimApiDebugActions
-        cp -R About 1.6 LICENSE artifacts/mod/RimApiDebugActions/
+        cp -R About 1.7 LICENSE artifacts/mod/RimApiDebugActions/
         (cd artifacts/mod && zip -r "../${{ steps.stamp.outputs.zip }}" RimApiDebugActions/)
         ls -la "artifacts/${{ steps.stamp.outputs.zip }}"
 
