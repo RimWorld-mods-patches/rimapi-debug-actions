@@ -5,7 +5,7 @@
     <Nullable>disable</Nullable>
     <AssemblyName>RimApiDebugActions</AssemblyName>
     <RootNamespace>RimApiDebugActions</RootNamespace>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <DebugSymbols>false</DebugSymbols>
@@ -13,16 +13,16 @@
     <OutputPath>../../1.7/Assemblies/</OutputPath>
   </PropertyGroup>
 
-  <!-- RIMAPI is not on NuGet. Its 1.10.0 release carries its API assemblies
-       under 1.6/Assemblies; the API contract is used to build this 1.7 mod.
+  <!-- RIMAPI is not on NuGet. Its 1.12.0 release carries its API assemblies
+       under 1.7/Assemblies; the API contract is used to build this 1.7 mod.
        The build verifies the archive hash and references assemblies from obj/.
        Nothing from RIMAPI is copied into this mod. -->
   <PropertyGroup>
-    <RimApiVersion>1.10.0</RimApiVersion>
-    <RimApiSha256>4c07cd4f23cb88287c86a0159f11e9e935b22b7d460f4675a19191136e479dc9</RimApiSha256>
+    <RimApiVersion>1.12.0</RimApiVersion>
+    <RimApiSha256>b153e360e8fa5f0733ba569945b1728004576851749c9862f47127276dd265fe</RimApiSha256>
     <RimApiArchiveUrl>https://github.com/IlyaChichkov/RIMAPI/releases/download/v$(RimApiVersion)/RIMAPI-$(RimApiVersion).zip</RimApiArchiveUrl>
     <RimApiCache>$(MSBuildProjectDirectory)/obj/rimapi/$(RimApiVersion)</RimApiCache>
-    <RimApiDirectory>$(RimApiCache)/1.6/Assemblies</RimApiDirectory>
+    <RimApiDirectory>$(RimApiCache)/1.7/Assemblies</RimApiDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,6 +49,6 @@
            Text="RIMAPI $(RimApiVersion) archive hash $(_RimApiArchiveHash) does not match the pinned $(RimApiSha256)." />
     <Unzip SourceFiles="$(_RimApiArchive)" DestinationFolder="$(RimApiCache)" />
     <Error Condition="!Exists('$(RimApiDirectory)/RIMAPI.dll') Or !Exists('$(RimApiDirectory)/Newtonsoft.Json.dll')"
-           Text="RIMAPI $(RimApiVersion) archive has no 1.6/Assemblies/RIMAPI.dll and Newtonsoft.Json.dll." />
+           Text="RIMAPI $(RimApiVersion) archive has no 1.7/Assemblies/RIMAPI.dll and Newtonsoft.Json.dll." />
   </Target>
 </Project>

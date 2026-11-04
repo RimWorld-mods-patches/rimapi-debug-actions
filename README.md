@@ -18,7 +18,7 @@ This release supports RimWorld 1.7. For RimWorld 1.6, use [release 0.2.0](https:
 
 ## API
 
-RIMAPI 1.10 mounts the extension under `/api/v1/debug-actions`:
+RIMAPI 1.12 mounts the extension under `/api/v1/debug-actions`:
 
 | Method | Path | Purpose |
 | --- | --- | --- |
