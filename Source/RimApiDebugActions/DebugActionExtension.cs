@@ -1,4 +1,5 @@
 using RIMAPI.Core;
+using RIMAPI.Http;
 
 namespace RimApiDebugActions
 {
